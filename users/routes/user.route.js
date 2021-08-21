@@ -9,13 +9,13 @@ const { validates } = require('../middlewares/validation.middle');
 const router = express.Router();
 
 
-// router.get('/', async (req, res) => {
-//     const users = await userService.getUser();
-//     return res.status(200).json({
-//         message: "Request Successful",
-//         data: users
-//     })
-// })
+router.get('/user/list', async (req, res) => {
+    const users = await userService.getUser();
+    return res.status(200).json({
+        message: "Request Successful",
+        data: users
+    })
+});
 
 router.post('/user/create',
     [...userValidators.createUserSchema, validates],

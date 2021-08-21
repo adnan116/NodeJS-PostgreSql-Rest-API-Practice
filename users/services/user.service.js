@@ -7,12 +7,12 @@ async function createUser(username, mobile, name, gender, role, password) {
     return result.rows[0].id;
 }
 
-// async function getUser() {
-//     const users = await db.query("SELECT * FROM users");
-//     return users.rows;
-// }
+async function getUser() {
+    const users = await db.query("SELECT * FROM users");
+    return users.rows;
+}
 
 module.exports = {
     createUser,
-    //getUser
+    getUser
 }

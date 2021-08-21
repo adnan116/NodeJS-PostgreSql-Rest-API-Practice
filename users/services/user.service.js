@@ -12,7 +12,14 @@ async function getUser() {
     return users.rows;
 }
 
+async function getUserWithId(id) {
+    console.log("inside id");
+    const users = await db.query("SELECT * FROM users where id = $1",[id]);
+    return users.rows;
+}
+
 module.exports = {
     createUser,
-    getUser
+    getUser,
+    getUserWithId
 }

@@ -9,14 +9,6 @@ const { validates } = require('../middlewares/validation.middle');
 const router = express.Router();
 
 
-router.get('/user/list', async (req, res) => {
-    const users = await userService.getUser();
-    return res.status(200).json({
-        message: "Request Successful",
-        data: users
-    })
-});
-
 router.post('/user/create',
     [...userValidators.createUserSchema, validates],
     async (req, res) => {
@@ -28,5 +20,23 @@ router.post('/user/create',
         })
     }
 );
+
+router.get('/user/list', async (req, res) => {
+    const users = await userService.getUser();
+    return res.status(200).json({
+        message: "Request Successful",
+        data: users
+    })
+});
+
+router.post('/user/id', async (req, res) => {
+    const { id } = req.body;
+    console.log(id);
+    const users = await userService.getUserWithId(id);
+    return res.status(200).json({
+        message: "Request Successful",
+        data: users
+    })
+});
 
 module.exports = router;

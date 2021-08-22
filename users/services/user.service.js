@@ -20,14 +20,21 @@ async function getUserWithId(id) {
 
 async function updateUser(username, mobile, name, gender, role, password, id) {
     console.log("Update User");
-    await db.query('Update users SET username = $1, mobile = $2, name = $3, gender = $4, role = $5, password = $6 WHERE id = $7 RETURNING id'
+    await db.query('Update users SET username = $1, mobile = $2, name = $3, gender = $4, role = $5, password = $6 WHERE id = $7'
     ,[username, mobile, name, gender, role, password, id]);
-    console.log("done");
+    console.log("update done");
+}
+
+async function deleteUser(id) {
+    console.log("Delete User");
+    await db.query('DELETE FROM users WHERE id = $1',[id]);
+    console.log("delete done");
 }
 
 module.exports = {
     createUser,
     getUser,
     getUserWithId,
-    updateUser
+    updateUser,
+    deleteUser
 }

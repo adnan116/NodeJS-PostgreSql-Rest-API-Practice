@@ -24,10 +24,10 @@ process.on("uncaughtException", (err) => {
 });
 
 
-// process.on("unhandledRejection", (error) => {
-//     console.error("[ERROR] From event: ", error?.toString());
-//     process.exit(1);
-// });
+process.on("unhandledRejection", (error) => {
+    console.error("[ERROR] From event: ", error?.toString());
+    process.exit(1);
+});
 
 
 userModule.init(app);

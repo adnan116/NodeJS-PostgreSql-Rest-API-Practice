@@ -39,4 +39,19 @@ router.post('/user/id', async (req, res) => {
     })
 });
 
+router.put('/user/update/:id',
+    [...userValidators.createUserSchema, validates],
+    async (req, res) => {
+        console.log("Update User API");
+        var id = req.params.id;
+        console.log(id);
+        const { username, mobile, name, gender, role, password } = req.body;
+        await userService.updateUser(username, mobile, name, gender, role, password, id);
+        return res.status(201).json({
+            id: id,
+            message: "Updated Successfully"
+        })
+    }
+);
+
 module.exports = router;

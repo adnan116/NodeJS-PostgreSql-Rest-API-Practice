@@ -18,8 +18,16 @@ async function getUserWithId(id) {
     return users.rows;
 }
 
+async function updateUser(username, mobile, name, gender, role, password, id) {
+    console.log("Update User");
+    await db.query('Update users SET username = $1, mobile = $2, name = $3, gender = $4, role = $5, password = $6 WHERE id = $7 RETURNING id'
+    ,[username, mobile, name, gender, role, password, id]);
+    console.log("done");
+}
+
 module.exports = {
     createUser,
     getUser,
-    getUserWithId
+    getUserWithId,
+    updateUser
 }

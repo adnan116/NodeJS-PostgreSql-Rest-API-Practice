@@ -1,18 +1,23 @@
 const express = require('express');
-const { json } = require('body-parser');
+const { json, urlencoded } = require('body-parser');
 
 // module import
 const userModule = require('./users');
-//const roleModule = require('./roles');
 
 const errorHandler = require('./middlewares/error-handler.middle');
+const bodyParser = require('body-parser');
 
 const app = express();
 
 app.use(json());
+app.use(
+    urlencoded({
+      extended: true,
+    })
+);
 
 
-//for handling uncaught exception from application
+
 process.on("uncaughtException", (err) => {
     console.error("[ERROR] Uncaught Exception : ", err.message);
     process.exit(1);
@@ -24,16 +29,10 @@ process.on("uncaughtException", (err) => {
 //     process.exit(1);
 // });
 
-/**
- * Register Routes
- */
 
 userModule.init(app);
-///roleModule.init(app);
 
-/**
- * Register Error Handler
- */
+
 app.use(errorHandler);
 
 

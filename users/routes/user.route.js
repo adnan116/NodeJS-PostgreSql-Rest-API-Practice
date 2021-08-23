@@ -13,8 +13,8 @@ router.post('/user/create',
     [...userValidators.createUserSchema, validates],
     async (req, res) => {
         console.log("Create User API")
-        const { username, mobile, name, gender, role, password } = req.body;
-        const newIUserId = await userService.createUser(username, mobile, name, gender, role, password);
+        const { username, mobile, name, gender, role, password, data, mimeType } = req.body;
+        const newIUserId = await userService.createUser(username, mobile, name, gender, role, password, data, mimeType);
         return res.status(201).json({
             id: newIUserId
         })
@@ -29,8 +29,8 @@ router.get('/user/list', async (req, res) => {
     })
 });
 
-router.post('/user/id', async (req, res) => {
-    const { id } = req.body;
+router.post('/user/:id', async (req, res) => {
+    var id = req.params.id;
     console.log(id);
     const users = await userService.getUserWithId(id);
     return res.status(200).json({
@@ -56,15 +56,15 @@ router.put('/user/update/:id',
 
 router.delete('/user/delete/:id',
     async (req, res) => {
-            console.log("Delete User API");
-            var id = req.params.id;
-            console.log(id);
-            await userService.deleteUser(id);
-            return res.status(201).json({
-                id: id,
-                message: "Delete Successfully"
-            })
-        }
+        console.log("Delete User API");
+        var id = req.params.id;
+        console.log(id);
+        await userService.deleteUser(id);
+        return res.status(201).json({
+            id: id,
+            message: "Delete Successfully"
+        })
+    }
 );
 
 module.exports = router;

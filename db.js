@@ -1,4 +1,5 @@
-const { Pool } = require('pg')
+const { text } = require('body-parser');
+const { Pool, Client } = require('pg')
 const { appConf } = require('./configs/app.config');
 
 console.log("Database Started");
@@ -13,6 +14,16 @@ const pool = new Pool({
 
 
 
+// const client = new Client({
+//     host: appConf.DB_HOST,
+//     port: appConf.DB_PORT,
+//     user: appConf.DB_USER,
+//     password: appConf.DB_PASSWORD,
+// })
+
+
+
+
 module.exports = {
-    query: (text, params) => pool.query(text, params),
+    query: (text, params) => pool.query(text, params)
 }

@@ -88,11 +88,26 @@ async function deleteUser(id) {
     }
 }
 
+async function pagination(itemsPerPage, page) {
+    try{
+        await db.query('BEGIN');
+        const queryText = 'SELECT id, username, mobile, name, gender, role FROM users LIMIT '+itemsPerPage+' OFFSET('+page+' - 1) * '+itemsPerPage;
+        console.log("inside pagination");
+        const result = await db.query(queryText);
+        await db.query('COMMIT');
+        return result.rows;
+    }catch (err) {
+        await db.query('ROLLBACK');
+        throw err;
+    }
+}
+
 module.exports = {
     createUser,
     getUser,
     getUserWithId,
     updateUser,
     deleteUser,
-    UniqueCheck
+    UniqueCheck,
+    pagination
 }

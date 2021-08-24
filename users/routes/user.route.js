@@ -39,7 +39,7 @@ router.post('/user/create',
     }
 );
 
-router.get('/user/list', async (res) => {
+router.get('/user/list', async (req, res) => {
     const users = await userService.getUser();
     return res.status(200).json({
         message: "Request Successful",
@@ -84,5 +84,17 @@ router.delete('/user/delete/:id',
         })
     }
 );
+
+router.get('/user/list/pagination/:limit&:pageno', async (req, res) => {
+    var limit = req.params.limit;
+    var pageno = req.params.pageno;
+    console.log(limit);
+    console.log(pageno);
+    const users = await userService.pagination(limit, pageno);
+    return res.status(200).json({
+        message: "Request Successful",
+        data: users
+    })
+});
 
 module.exports = router;

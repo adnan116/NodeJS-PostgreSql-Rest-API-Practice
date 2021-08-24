@@ -13,17 +13,6 @@ const pool = new Pool({
 })
 
 
-
-// const client = new Client({
-//     host: appConf.DB_HOST,
-//     port: appConf.DB_PORT,
-//     user: appConf.DB_USER,
-//     password: appConf.DB_PASSWORD,
-// })
-
-
-
-
 module.exports = {
     query: (text, params) => pool.query(text, params)
 }

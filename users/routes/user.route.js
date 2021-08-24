@@ -15,16 +15,31 @@ router.post('/user/create',
     async (req, res) => {
         console.log("Create User API")
         const { username, mobile, name, gender, role, password, data, mimeType } = req.body;
-        const salt = await bcrypt.genSalt(10);
-        var hashPassword = await bcrypt.hash(password, salt);
-        const newIUserId = await userService.createUser(username, mobile, name, gender, role, hashPassword, data, mimeType);
-        return res.status(201).json({
-            id: newIUserId
-        })
+        console.log(await userService.UniqueCheck('username', username));
+        var uniqueUsername = await userService.UniqueCheck('username', username);
+        var uniqueMobile = await userService.UniqueCheck('mobile', mobile);
+        if(uniqueUsername > 0){
+            const err = new Error('Username is not unique. It has been already used');
+            return res.status(400).json({
+                message: err.message
+            })
+        }else if(uniqueMobile > 0){
+            const err = new Error('Mobile number is not unique. It has been already used');
+            return res.status(400).json({
+                message: err.message
+            })
+        }else{
+            const salt = await bcrypt.genSalt(10);
+            var hashPassword = await bcrypt.hash(password, salt);
+            const newIUserId = await userService.createUser(username, mobile, name, gender, role, hashPassword, data, mimeType);
+            return res.status(201).json({
+                id: newIUserId
+            })
+        }
     }
 );
 
-router.get('/user/list', async (req, res) => {
+router.get('/user/list', async (res) => {
     const users = await userService.getUser();
     return res.status(200).json({
         message: "Request Successful",

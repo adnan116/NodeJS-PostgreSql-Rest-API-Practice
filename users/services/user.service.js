@@ -1,5 +1,19 @@
 const db = require('../../db');
 
+async function UniqueCheck(colName, value) {
+    try{
+        await db.query('BEGIN');
+        const queryText = 'select count(username) as flag from users where '+colName+' = $1';
+        console.log(queryText);
+        const result = await db.query(queryText, [value]);
+        await db.query('COMMIT');
+        return result.rows[0].flag;
+    }catch (err) {
+        await db.query('ROLLBACK');
+        throw err;
+     }
+ }
+
 async function createUser(username, mobile, name, gender, role, password, data, mimeType) {
     try{
         await db.query('BEGIN')
@@ -15,7 +29,6 @@ async function createUser(username, mobile, name, gender, role, password, data, 
         throw err;
     }
 }
-
 
 async function getUser() {
    try{
@@ -80,5 +93,6 @@ module.exports = {
     getUser,
     getUserWithId,
     updateUser,
-    deleteUser
+    deleteUser,
+    UniqueCheck
 }

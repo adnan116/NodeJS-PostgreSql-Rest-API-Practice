@@ -20,8 +20,7 @@ async function createUser(username, mobile, name, gender, role, password, data, 
         const queryText = 'INSERT INTO users (username, mobile, name, gender, role, password) values($1, $2, $3, $4, $5, $6) RETURNING id';
         const result = await db.query(queryText, [username, mobile, name, gender, role, password]);
         const insertimageData = 'INSERT INTO users_image(id, "data", "mimeType") values($1, $2, $3)';
-        const insertImageValues = [result.rows[0].id, data, mimeType ];
-        await db.query(insertimageData, insertImageValues);
+        await db.query(insertimageData, [result.rows[0].id, data, mimeType]);
         await db.query('COMMIT');
         return result.rows[0].id;
     }catch (err) {

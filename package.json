@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/adnan116/NodeJS-PostgreSql-Rest-API-Practice#readme",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "create-hash": "^1.2.0",
     "express": "^4.17.1",

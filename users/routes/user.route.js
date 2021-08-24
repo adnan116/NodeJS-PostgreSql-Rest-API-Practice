@@ -3,6 +3,7 @@ const userService = require('../services/user.service');
 const userValidators = require('../validators/user.validator');
 const { validationResult, body } = require('express-validator');
 const { validates } = require('../middlewares/validation.middle');
+const bcrypt = require("bcryptjs");
 
 
 
@@ -14,7 +15,9 @@ router.post('/user/create',
     async (req, res) => {
         console.log("Create User API")
         const { username, mobile, name, gender, role, password, data, mimeType } = req.body;
-        const newIUserId = await userService.createUser(username, mobile, name, gender, role, password, data, mimeType);
+        const salt = await bcrypt.genSalt(10);
+        var hashPassword = await bcrypt.hash(password, salt);
+        const newIUserId = await userService.createUser(username, mobile, name, gender, role, hashPassword, data, mimeType);
         return res.status(201).json({
             id: newIUserId
         })

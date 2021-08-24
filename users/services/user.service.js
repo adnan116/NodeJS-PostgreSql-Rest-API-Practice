@@ -20,7 +20,7 @@ async function createUser(username, mobile, name, gender, role, password, data, 
 async function getUser() {
    try{
     await db.query('BEGIN');
-    const queryText = 'SELECT id, username, mobile, name, gender, role FROM users ORDER BY id';
+    const queryText = 'select users.id, username, mobile, name, gender, role, data, "mimeType" from users left join users_image on users.id = users_image.id order by users.id';
     const result = await db.query(queryText);
     await db.query('COMMIT');
     return result.rows;
@@ -33,7 +33,7 @@ async function getUser() {
 async function getUserWithId(id) {
     try{
         await db.query('BEGIN');
-        const queryText = 'SELECT id, username, mobile, name, gender, role FROM users where id = $1';
+        const queryText = 'select users.id, username, mobile, name, gender, role, data, "mimeType" from users left join users_image on users.id = users_image.id where users.id = $1';
         console.log("inside id");
         const result = await db.query(queryText, [id]);
         await db.query('COMMIT');

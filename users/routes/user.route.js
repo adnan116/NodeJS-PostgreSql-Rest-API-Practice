@@ -47,7 +47,7 @@ router.get('/user/list', async (req, res) => {
     })
 });
 
-router.post('/user/:id', async (req, res) => {
+router.get('/user/:id', async (req, res) => {
     var id = req.params.id;
     console.log(id);
     const users = await userService.getUserWithId(id);
@@ -63,12 +63,29 @@ router.put('/user/update/:id',
         console.log("Update User API");
         var id = req.params.id;
         console.log(id);
-        const { username, mobile, name, gender, role, password } = req.body;
-        await userService.updateUser(username, mobile, name, gender, role, password, id);
-        return res.status(201).json({
-            id: id,
-            message: "Updated Successfully"
-        })
+        const { username, mobile, name, gender, role, password , data, mimeType} = req.body;
+        var uniqueUsername = await userService.UniqueCheck('username', username);
+        var uniqueMobile = await userService.UniqueCheck('mobile', mobile);
+        if(uniqueUsername > 0){
+            const err = new Error('Username is not unique. It has been already used');
+            return res.status(400).json({"errors":{
+                message: err.message
+            }})
+        }else if(uniqueMobile > 0){
+            const err = new Error('Mobile number is not unique. It has been already used');
+            return res.status(400).json({"errors":{
+                message: err.message
+            }})
+        }else{
+            const salt = await bcrypt.genSalt(10);
+            var hashPassword = await bcrypt.hash(password, salt);
+            await userService.updateUser(username, mobile, name, gender, role, hashPassword, data, mimeType, id);
+            return res.status(201).json({
+                id: id,
+                message: "Updated Successfully"
+            })
+        }
+        
     }
 );
 

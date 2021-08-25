@@ -56,12 +56,14 @@ async function getUserWithId(id) {
     }
 }
 
-async function updateUser(username, mobile, name, gender, role, password, id) {
+async function updateUser(username, mobile, name, gender, role, password, data, mimeType, id) {
     try{
         await db.query('BEGIN')
         console.log("Update User");
         const queryText = 'Update users SET username = $1, mobile = $2, name = $3, gender = $4, role = $5, password = $6 WHERE id = $7';
         await db.query(queryText, [username, mobile, name, gender, role, password, id]);
+        const queryText2 = 'Update users_image SET data = $1, "mimeType" = $2 WHERE id = $3';
+        await db.query(queryText2, [data, mimeType, id]);
         await db.query('COMMIT');
         console.log("update done");
     }catch (err) {

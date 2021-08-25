@@ -105,7 +105,7 @@ async function getTotalUser() {
 async function pagination(itemsPerPage, page) {
     try{
         await db.query('BEGIN');
-        const queryText = 'SELECT id, username, mobile, name, gender, role FROM users LIMIT '+itemsPerPage+' OFFSET('+page+' - 1) * '+itemsPerPage;
+        const queryText = 'SELECT id, username, mobile, name, gender, role FROM users ORDER BY id LIMIT '+itemsPerPage+' OFFSET('+page+' - 1) * '+itemsPerPage;
         console.log("inside pagination");
         const result = await db.query(queryText);
         await db.query('COMMIT');

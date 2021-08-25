@@ -87,6 +87,19 @@ async function deleteUser(id) {
     }
 }
 
+async function getTotalUser() {
+    try{
+     await db.query('BEGIN');
+     const queryText = 'select count(username) as total from users';
+     const result = await db.query(queryText);
+     await db.query('COMMIT');
+     return result.rows[0].total;
+    }catch (err) {
+        await db.query('ROLLBACK');
+        throw err;
+     }
+ }
+
 async function pagination(itemsPerPage, page) {
     try{
         await db.query('BEGIN');
@@ -108,5 +121,6 @@ module.exports = {
     updateUser,
     deleteUser,
     UniqueCheck,
-    pagination
+    pagination,
+    getTotalUser
 }

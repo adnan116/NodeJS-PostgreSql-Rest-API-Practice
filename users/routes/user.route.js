@@ -20,20 +20,20 @@ router.post('/user/create',
         var uniqueMobile = await userService.UniqueCheck('mobile', mobile);
         if(uniqueUsername > 0){
             const err = new Error('Username is not unique. It has been already used');
-            return res.status(400).json({
+            return res.status(400).json({"errors":{
                 message: err.message
-            })
+            }})
         }else if(uniqueMobile > 0){
             const err = new Error('Mobile number is not unique. It has been already used');
-            return res.status(400).json({
+            return res.status(400).json({"errors":{
                 message: err.message
-            })
+            }})
         }else{
             const salt = await bcrypt.genSalt(10);
             var hashPassword = await bcrypt.hash(password, salt);
-            const newIUserId = await userService.createUser(username, mobile, name, gender, role, hashPassword, data, mimeType);
+            const newUserId = await userService.createUser(username, mobile, name, gender, role, hashPassword, data, mimeType);
             return res.status(201).json({
-                id: newIUserId
+                id: newUserId
             })
         }
     }
@@ -91,8 +91,14 @@ router.get('/user/list/pagination/:limit&:pageno', async (req, res) => {
     console.log(limit);
     console.log(pageno);
     const users = await userService.pagination(limit, pageno);
+    const totalUsers = await userService.getTotalUser();
+    const totalPages = Math.ceil(totalUsers/limit);
     return res.status(200).json({
         message: "Request Successful",
+        limit: limit,
+        totalPages: totalPages,
+        currentPage: pageno,
+        totalLogs: totalUsers,
         data: users
     })
 });

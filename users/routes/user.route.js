@@ -15,9 +15,9 @@ router.post('/user/create',
     async (req, res) => {
         console.log("Create User API")
         const { username, mobile, name, gender, role, password, data, mimeType } = req.body;
-        console.log(await userService.UniqueCheck('username', username));
-        var uniqueUsername = await userService.UniqueCheck('username', username);
-        var uniqueMobile = await userService.UniqueCheck('mobile', mobile);
+        console.log(await userService.uniqueCheckCreate('username', username));
+        var uniqueUsername = await userService.uniqueCheckCreate('username', username);
+        var uniqueMobile = await userService.uniqueCheckCreate('mobile', mobile);
         if(uniqueUsername > 0){
             const err = new Error('Username is not unique. It already exists');
             return res.status(400).json({"errors":{
@@ -33,7 +33,8 @@ router.post('/user/create',
             var hashPassword = await bcrypt.hash(password, salt);
             const newUserId = await userService.createUser(username, mobile, name, gender, role, hashPassword, data, mimeType);
             return res.status(201).json({
-                id: newUserId
+                id: newUserId,
+                message: "User Created"
             })
         }
     }
@@ -64,14 +65,27 @@ router.put('/user/update/:id',
         var id = req.params.id;
         console.log(id);
         const { username, mobile, name, gender, role, password , data, mimeType} = req.body;
-       
-        const salt = await bcrypt.genSalt(10);
-        var hashPassword = await bcrypt.hash(password, salt);
-        await userService.updateUser(username, mobile, name, gender, role, hashPassword, data, mimeType, id);
-        return res.status(201).json({
-            id: id,
-            message: "Updated Successfully"
-        })    
+        var uniqueUsername = await userService.uniqueCheckUpdate('username', username, id);
+        var uniqueMobile = await userService.uniqueCheckUpdate('mobile', mobile, id);
+        if(uniqueUsername > 0){
+            const err = new Error('Username is not unique. It already exists');
+            return res.status(400).json({"errors":{
+                message: err.message
+            }})
+        }else if(uniqueMobile > 0){
+            const err = new Error('Mobile number is not unique. It already exists');
+            return res.status(400).json({"errors":{
+                message: err.message
+            }})
+        }else{
+            const salt = await bcrypt.genSalt(10);
+            var hashPassword = await bcrypt.hash(password, salt);
+            await userService.updateUser(username, mobile, name, gender, role, hashPassword, data, mimeType, id);
+            return res.status(201).json({
+                id: id,
+                message: "Updated Successfully"
+            })
+        }         
     }
 );
 
@@ -93,7 +107,7 @@ router.get('/user/list/pagination/:limit&:pageno', async (req, res) => {
     var pageno = req.params.pageno;
     console.log(limit);
     console.log(pageno);
-    const users = await userService.pagination(limit, pageno);
+    const users = await userService.getUsersByPagination(limit, pageno);
     const totalUsers = await userService.getTotalUser();
     const totalPages = Math.ceil(totalUsers/limit);
     return res.status(200).json({

@@ -15,8 +15,6 @@ class RequestValidationError extends CustomError {
         })
         return formattedErrors;
     }
-
-
 }
 
 module.exports = RequestValidationError;

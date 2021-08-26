@@ -20,14 +20,14 @@ router.post('/user/create',
         var uniqueMobile = await userService.uniqueCheckCreate('mobile', mobile);
         if(uniqueUsername > 0){
             const err = new Error('Username is not unique. It already exists');
-            return res.status(400).json({"errors":{
+            return res.status(400).json({
                 message: err.message
-            }})
+            })
         }else if(uniqueMobile > 0){
             const err = new Error('Mobile number is not unique. It already exists');
-            return res.status(400).json({"errors":{
+            return res.status(400).json({
                 message: err.message
-            }})
+            })
         }else{
             const salt = await bcrypt.genSalt(10);
             var hashPassword = await bcrypt.hash(password, salt);
@@ -69,14 +69,14 @@ router.put('/user/update/:id',
         var uniqueMobile = await userService.uniqueCheckUpdate('mobile', mobile, id);
         if(uniqueUsername > 0){
             const err = new Error('Username is not unique. It already exists');
-            return res.status(400).json({"errors":{
+            return res.status(400).json({
                 message: err.message
-            }})
+            })
         }else if(uniqueMobile > 0){
             const err = new Error('Mobile number is not unique. It already exists');
-            return res.status(400).json({"errors":{
+            return res.status(400).json({
                 message: err.message
-            }})
+            })
         }else{
             const salt = await bcrypt.genSalt(10);
             var hashPassword = await bcrypt.hash(password, salt);
@@ -102,9 +102,9 @@ router.delete('/user/delete/:id',
     }
 );
 
-router.get('/user/list/pagination/:limit&:pageno', async (req, res) => {
-    var limit = req.params.limit;
-    var pageno = req.params.pageno;
+router.get('/user/list/pagination', async (req, res) => {
+    var limit = req.query.limit;
+    var pageno = req.query.pageno;
     console.log(limit);
     console.log(pageno);
     const users = await userService.getUsersByPagination(limit, pageno);

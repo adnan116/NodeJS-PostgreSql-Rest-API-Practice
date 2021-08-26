@@ -139,5 +139,5 @@ module.exports = {
     uniqueCheckCreate,
     uniqueCheckUpdate,
     getUsersByPagination,
-    getTotalUser,
+    getTotalUser
 }

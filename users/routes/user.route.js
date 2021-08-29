@@ -94,11 +94,20 @@ router.delete('/user/delete/:id',
         console.log("Delete User API");
         var id = req.params.id;
         console.log(id);
-        await userService.deleteUser(id);
-        return res.status(201).json({
-            id: id,
-            message: "Delete Successfully"
-        })
+        const users = await userService.getUserWithId(id);
+        //console.log(users);
+        if(users.length === 0){
+            const err = new Error('User not found');
+            return res.status(400).json({
+                message: err.message
+            })
+        }else{
+            await userService.deleteUser(id);
+            return res.status(201).json({
+                id: id,
+                message: "Delete Successfully"
+            })
+        }
     }
 );
 
